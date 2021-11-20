@@ -1,0 +1,31 @@
+* {
+  box-sizing: border-box;
+}
+
+h1 {
+  text-align: center;
+}
+
+.playground {
+  width: 300px;
+  margin: 0 auto;
+  border: 1px solid;
+}
+
+.playground div {
+  display: flex;
+}
+
+.playground span {
+  width: 30px;
+  height: 30px;
+  border: 1px solid lightgrey;
+}
+
+.square {
+  background-color: orange;
+}
+
+.tree {
+  background-color: tomato;
+}
