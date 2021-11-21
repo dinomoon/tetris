@@ -1,120 +1,66 @@
-const playGround = document.querySelector('.playground');
-const GAME_ROWS = 20;
-const GAME_COLS = 10;
+import { blocks } from './blocks.js';
+import { GAME_ROWS, initialState } from './state.js';
+import {
+  drawInitialTetris,
+  getWidth,
+  getHeight,
+  getLeft,
+  getTop,
+} from './utils.js';
+import { playGround } from './dom.js';
+import { GAME_COLS } from './state.js';
 
-for (let i = 0; i < GAME_ROWS; i++) {
-  const row = document.createElement('div');
-  for (let j = 0; j < GAME_COLS; j++) {
-    const col = document.createElement('span');
-    row.appendChild(col);
-  }
-  playGround.appendChild(row);
-}
+const app = () => {
+  let state = { ...initialState };
 
-const blocks = {
-  square: [
-    [
-      [0, 0],
-      [0, 1],
-      [1, 0],
-      [1, 1],
-    ],
-    [
-      [0, 0],
-      [0, 1],
-      [1, 0],
-      [1, 1],
-    ],
-    [
-      [0, 0],
-      [0, 1],
-      [1, 0],
-      [1, 1],
-    ],
-    [
-      [0, 0],
-      [0, 1],
-      [1, 0],
-      [1, 1],
-    ],
-  ],
-  tree: [
-    [
-      [0, 1],
-      [1, 0],
-      [1, 1],
-      [1, 2],
-    ],
-    [
-      [0, 1],
-      [2, 1],
-      [1, 1],
-      [1, 2],
-    ],
-    [
-      [1, 0],
-      [2, 1],
-      [1, 1],
-      [1, 2],
-    ],
-    [
-      [0, 1],
-      [1, 0],
-      [1, 1],
-      [2, 1],
-    ],
-  ],
-};
+  drawInitialTetris();
 
-const etc = {
-  type: 'tree',
-  dir: 0,
-  left: 3,
-  top: 0,
-};
-
-const draw = () => {
-  console.log(etc);
-  const { type, dir, left, top } = etc;
-  const movingBlocks = document.querySelectorAll('.moving');
-  movingBlocks.forEach(block => block.classList.remove(type, 'moving'));
-  blocks[type][dir].forEach(v => {
-    const x = v[0] + top;
-    const y = v[1] + left;
-    // playGround.children[x]?.children[y]?.classList.add(type, 'moving');
-    const a = playGround.children[x]?.children[y];
-    if (!a) {
-      playGround.children[x - top].children[y - left].classList.add(
-        type,
-        'moving',
-      );
-    } else {
+  const render = () => {
+    const { type, dir, left, top } = state;
+    // console.log(left);
+    const movingBlocks = document.querySelectorAll('.moving');
+    movingBlocks.forEach(block => block.classList.remove(type, 'moving'));
+    blocks[type][dir].forEach(v => {
+      let x = v[0] + top;
+      let y = v[1] + left;
       playGround.children[x].children[y].classList.add(type, 'moving');
+    });
+  };
+
+  render();
+
+  document.body.addEventListener('keydown', e => {
+    let left;
+    switch (e.key) {
+      case 'ArrowLeft':
+        left = getLeft(state);
+        if (left > 0) {
+          state.left--;
+          render();
+        }
+        break;
+      case 'ArrowRight':
+        left = getLeft(state);
+        if (left + getWidth(state) < GAME_COLS) {
+          state.left++;
+          render();
+        }
+        break;
+      case 'ArrowDown':
+        let top = getTop(state);
+        if (top + getHeight(state) < GAME_ROWS) {
+          state.top++;
+          render();
+        }
+        break;
+      case 'ArrowUp':
+        state.dir = state.dir === 3 ? 0 : ++state.dir;
+        render();
+        break;
+      default:
+        break;
     }
   });
 };
 
-draw();
-
-document.body.addEventListener('keydown', e => {
-  switch (e.key) {
-    case 'ArrowLeft':
-      etc.left--;
-      draw();
-      break;
-    case 'ArrowRight':
-      etc.left++;
-      draw();
-      break;
-    case 'ArrowDown':
-      etc.top++;
-      draw();
-      break;
-    case 'ArrowUp':
-      etc.dir = etc.dir === 3 ? 0 : ++etc.dir;
-      draw();
-      break;
-    default:
-      break;
-  }
-});
+export default app;
