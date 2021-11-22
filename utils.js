@@ -2,7 +2,7 @@ import { playGround } from './dom.js';
 import { GAME_ROWS, GAME_COLS } from './state.js';
 import { blocks } from './blocks.js';
 
-export const drawInitialTetris = () => {
+export const drawTetris = () => {
   for (let i = 0; i < GAME_ROWS; i++) {
     const row = document.createElement('div');
     for (let j = 0; j < GAME_COLS; j++) {
@@ -13,38 +13,56 @@ export const drawInitialTetris = () => {
   }
 };
 
-export const getLeft = state => {
-  const block = blocks[state.type][state.dir];
-  let arr = [];
-  block.forEach(v => {
-    arr.push(v[1]);
-  });
-  return Math.min(...arr) + state.left;
+export const removeCurrentBlocks = blockType => {
+  const movingBlocks = document.querySelectorAll('.moving');
+  movingBlocks.forEach(block => block.classList.remove(blockType, 'moving'));
 };
 
-export const getTop = state => {
-  const block = blocks[state.type][state.dir];
-  let arr = [];
-  block.forEach(v => {
-    arr.push(v[0]);
-  });
-  return Math.min(...arr) + state.top;
+export const addNewBlocks = (blockType, newBlocks) => {
+  newBlocks.forEach(v => v.classList.add(blockType, 'moving'));
 };
 
-export const getWidth = state => {
-  const block = blocks[state.type][state.dir];
-  let arr = [];
-  block.forEach(v => {
-    arr.push(v[1]);
+export const moveBlocks = (state, onLeft, onRight, onTop, onDir) => {
+  const { type: blockType, dir, left, top, keyType } = state;
+  let stop = false;
+  let newBlocks = [];
+
+  blocks[blockType][dir].forEach(v => {
+    let x = v[0] + left;
+    let y = v[1] + top;
+
+    if (!playGround.children[y] || !playGround.children[y].children[x]) {
+      stop = true;
+    } else {
+      newBlocks.push(playGround.children[y].children[x]);
+    }
   });
-  return Math.max(...arr) - Math.min(...arr) + 1;
+
+  if (stop) {
+    // 갈 수 없다면 이전 상태로 돌아가기
+    switch (keyType) {
+      case 'left':
+        onRight();
+        break;
+      case 'right':
+        onLeft();
+        break;
+      case 'down':
+        onTop();
+        break;
+      case 'up':
+        onDir();
+        break;
+      default:
+        break;
+    }
+    return;
+  }
+
+  removeCurrentBlocks(blockType);
+  addNewBlocks(blockType, newBlocks);
 };
 
-export const getHeight = state => {
-  const block = blocks[state.type][state.dir];
-  let arr = [];
-  block.forEach(v => {
-    arr.push(v[0]);
-  });
-  return Math.max(...arr) - Math.min(...arr) + 1;
+export const render = (state, onLeft, onRight, onTop, onDir) => {
+  moveBlocks(state, onLeft, onRight, onTop, onDir);
 };

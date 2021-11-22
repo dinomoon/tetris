@@ -1,66 +1,65 @@
-import { blocks } from './blocks.js';
-import { GAME_ROWS, initialState } from './state.js';
 import {
-  drawInitialTetris,
-  getWidth,
-  getHeight,
-  getLeft,
-  getTop,
-} from './utils.js';
-import { playGround } from './dom.js';
-import { GAME_COLS } from './state.js';
+  initialState,
+  moveLeft,
+  moveRight,
+  moveDown,
+  changeDir,
+} from './state.js';
+import { drawTetris, render } from './utils.js';
 
-const app = () => {
+// TODO:
+// FIXME:
+
+const App = () => {
   let state = { ...initialState };
 
-  drawInitialTetris();
-
-  const render = () => {
-    const { type, dir, left, top } = state;
-    // console.log(left);
-    const movingBlocks = document.querySelectorAll('.moving');
-    movingBlocks.forEach(block => block.classList.remove(type, 'moving'));
-    blocks[type][dir].forEach(v => {
-      let x = v[0] + top;
-      let y = v[1] + left;
-      playGround.children[x].children[y].classList.add(type, 'moving');
-    });
+  // 상태 변경 함수
+  const changeState = callback => {
+    state = callback(state);
+    render(state, onLeft, onRight, onTop, onDir);
+    console.log(state);
   };
 
-  render();
+  const onLeft = () => {
+    state.left--;
+  };
+
+  const onRight = () => {
+    state.left++;
+  };
+
+  const onTop = () => {
+    state.top--;
+  };
+
+  const onDir = () => {
+    state.dir--;
+    if (state.dir === -1) {
+      state.dir = 3;
+    }
+  };
 
   document.body.addEventListener('keydown', e => {
-    let left;
     switch (e.key) {
       case 'ArrowLeft':
-        left = getLeft(state);
-        if (left > 0) {
-          state.left--;
-          render();
-        }
+        changeState(moveLeft);
         break;
       case 'ArrowRight':
-        left = getLeft(state);
-        if (left + getWidth(state) < GAME_COLS) {
-          state.left++;
-          render();
-        }
+        changeState(moveRight);
         break;
       case 'ArrowDown':
-        let top = getTop(state);
-        if (top + getHeight(state) < GAME_ROWS) {
-          state.top++;
-          render();
-        }
+        changeState(moveDown);
         break;
       case 'ArrowUp':
-        state.dir = state.dir === 3 ? 0 : ++state.dir;
-        render();
+        changeState(changeDir);
         break;
       default:
         break;
     }
   });
+
+  drawTetris();
+  render(state);
 };
 
-export default app;
+export default App;

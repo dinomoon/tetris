@@ -1,8 +1,8 @@
-import app from './app.js';
+import App from './app.js';
 
 const run = () => {
   window.addEventListener('DOMContentLoaded', () => {
-    app();
+    App();
   });
 };
 
