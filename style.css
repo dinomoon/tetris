@@ -9,7 +9,7 @@ h1 {
 .playground {
   width: 300px;
   margin: 0 auto;
-  border: 1px solid;
+  border: 1px solid #495057;
 }
 
 .playground div {
@@ -19,13 +19,33 @@ h1 {
 .playground span {
   width: 30px;
   height: 30px;
-  border: 1px solid lightgrey;
+  border: 1px solid #ced4da;
 }
 
-.square {
-  background-color: orange;
+.O {
+  background-color: #ff8787;
 }
 
-.tree {
-  background-color: tomato;
+.T {
+  background-color: #da77f2;
+}
+
+.I {
+  background-color: #9775fa;
+}
+
+.L {
+  background-color: #4dabf7;
+}
+
+.J {
+  background-color: #748ffc;
+}
+
+.Z {
+  background-color: #38d9a9;
+}
+
+.S {
+  background-color: #ffd43b;
 }
