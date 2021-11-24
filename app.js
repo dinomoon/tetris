@@ -16,7 +16,7 @@ const App = () => {
   // 상태 변경 함수
   const changeState = callback => {
     state = callback(state);
-    render(state, onLeft, onRight, onTop, onDir, initial);
+    render(state, onLeft, onRight, onTop, onDir, initial, onStop);
   };
 
   const onLeft = () => {
@@ -36,6 +36,10 @@ const App = () => {
     if (state.dir === -1) {
       state.dir = 3;
     }
+  };
+
+  const onStop = () => {
+    state.stop = true;
   };
 
   const initial = () => {
@@ -59,6 +63,11 @@ const App = () => {
         break;
       case 'ArrowUp':
         changeState(changeDir);
+        break;
+      case ' ': // Spacebar
+        while (!state.stop) {
+          changeState(moveDown);
+        }
         break;
       default:
         break;

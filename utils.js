@@ -22,7 +22,52 @@ export const addNewBlocks = (blockType, newBlocks) => {
   newBlocks.forEach(v => v.classList.add(blockType, 'moving'));
 };
 
-export const moveBlocks = (state, onLeft, onRight, onTop, onDir, initial) => {
+const makeSeize = state => {
+  const { type: blockType, dir, left, top } = state;
+  blocks[blockType][dir].forEach(v => {
+    let x = v[0] + left;
+    let y = v[1] + top;
+    playGround.children[y].children[x].classList.remove('moving');
+    playGround.children[y].children[x].classList.add(blockType, 'seize');
+  });
+};
+
+const breakBlocks = () => {
+  // 없앨 수 있는 줄 있는지 확인하고 없앨 수 있으면 없애기
+  for (let i = GAME_ROWS - 1; i > 0; i--) {
+    let cnt = 0;
+    let breaks = [];
+    for (let j = 0; j < GAME_COLS; j++) {
+      if (playGround.children[i].children[j].classList.contains('seize')) {
+        breaks.push(playGround.children[i].children[j]);
+        cnt++;
+      } else {
+        break;
+      }
+    }
+    if (cnt === GAME_COLS) {
+      // 파괴
+      breaks.forEach(item => (item.className = ''));
+      // 밑으로 당기기
+      for (let k = i; k > 0; k--) {
+        for (let l = 0; l < GAME_COLS; l++) {
+          playGround.children[k].children[l].className =
+            playGround.children[k - 1].children[l].className;
+        }
+      }
+    }
+  }
+};
+
+export const moveBlocks = (
+  state,
+  onLeft,
+  onRight,
+  onTop,
+  onDir,
+  initial,
+  onStop,
+) => {
   const { type: blockType, dir, left, top, keyType } = state;
   let stop = false;
   let newBlocks = [];
@@ -66,24 +111,21 @@ export const moveBlocks = (state, onLeft, onRight, onTop, onDir, initial) => {
         onDir();
         break;
       case 'down':
+        onStop();
         onTop();
-        const { type: blockType, dir, left, top } = state;
-        blocks[blockType][dir].forEach(v => {
-          let x = v[0] + left;
-          let y = v[1] + top;
-          playGround.children[y].children[x].classList.remove('moving');
-          playGround.children[y].children[x].classList.add(blockType, 'seize');
-        });
-        // 블록 새로 추가
-        initial();
+        // 블럭 고정하기
+        makeSeize(state);
+        // 블럭 부수기
+        breakBlocks();
+        // 새로운 블록 추가
+        setTimeout(initial, 0);
       default:
         break;
     }
-    return;
+  } else {
+    removeCurrentBlocks(blockType);
+    addNewBlocks(blockType, newBlocks);
   }
-
-  removeCurrentBlocks(blockType);
-  addNewBlocks(blockType, newBlocks);
 };
 
 export const randomBlockType = () => {
@@ -100,6 +142,14 @@ export const randomBlockType = () => {
   return blockObj[Math.floor(Math.random() * 7)];
 };
 
-export const render = (state, onLeft, onRight, onTop, onDir, initial) => {
-  moveBlocks(state, onLeft, onRight, onTop, onDir, initial);
+export const render = (
+  state,
+  onLeft,
+  onRight,
+  onTop,
+  onDir,
+  initial,
+  onStop,
+) => {
+  moveBlocks(state, onLeft, onRight, onTop, onDir, initial, onStop);
 };

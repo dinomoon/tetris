@@ -7,6 +7,8 @@ export const initialState = {
   left: 3,
   top: 0,
   keyType: null,
+  intervalId: null,
+  stop: false,
 };
 
 export const moveLeft = state => {
