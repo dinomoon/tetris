@@ -59,6 +59,14 @@ const breakBlocks = () => {
   }
 };
 
+const clearTetris = () => {
+  for (let i = 0; i < GAME_ROWS; i++) {
+    for (let j = 0; j < GAME_COLS; j++) {
+      playGround.children[i].children[j].className = '';
+    }
+  }
+};
+
 export const moveBlocks = (
   state,
   onLeft,
@@ -115,10 +123,27 @@ export const moveBlocks = (
         onTop();
         // 블럭 고정하기
         makeSeize(state);
+
         // 블럭 부수기
         breakBlocks();
-        // 새로운 블록 추가
-        setTimeout(initial, 0);
+
+        // 마지막줄에 블럭이 있으면 게임 끝내기
+        let flag = false;
+        for (let i = 0; i < GAME_COLS; i++) {
+          if (playGround.children[0].children[i].classList.contains('seize')) {
+            alert('게임종료');
+            flag = true;
+            break;
+          }
+        }
+
+        if (flag) {
+          clearTetris();
+          setTimeout(initial, 0);
+        } else {
+          // 새로운 블록 추가
+          setTimeout(initial, 0);
+        }
       default:
         break;
     }
