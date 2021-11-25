@@ -1,5 +1,11 @@
-import { playGround } from './dom.js';
-import { GAME_ROWS, GAME_COLS } from './state.js';
+import { playGround, score } from './dom.js';
+import {
+  GAME_ROWS,
+  GAME_COLS,
+  SINGLE_LINE_SCORE,
+  DOUBLE_LINE_SCORE,
+  TRIPLE_LINE_SCORE,
+} from './state.js';
 import { blocks } from './blocks.js';
 
 export const drawTetris = () => {
@@ -34,6 +40,7 @@ const makeSeize = state => {
 
 const breakBlocks = () => {
   // 없앨 수 있는 줄 있는지 확인하고 없앨 수 있으면 없애기
+  let breakLine = 0;
   for (let i = GAME_ROWS - 1; i > 0; i--) {
     let cnt = 0;
     let breaks = [];
@@ -46,6 +53,7 @@ const breakBlocks = () => {
       }
     }
     if (cnt === GAME_COLS) {
+      breakLine++;
       // 파괴
       breaks.forEach(item => (item.className = ''));
       // 밑으로 당기기
@@ -57,6 +65,12 @@ const breakBlocks = () => {
       }
     }
   }
+
+  // 점수 추가하기
+  let curScore = +score.textContent;
+  if (breakLine === 1) score.innerHTML = curScore + SINGLE_LINE_SCORE;
+  else if (breakLine === 2) score.innerHTML = curScore + DOUBLE_LINE_SCORE;
+  else if (breakLine >= 3) score.innerHTML = curScore + TRIPLE_LINE_SCORE;
 };
 
 const checkFinish = () => {

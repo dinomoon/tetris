@@ -1,5 +1,8 @@
 export const GAME_ROWS = 20;
 export const GAME_COLS = 10;
+export const SINGLE_LINE_SCORE = 40;
+export const DOUBLE_LINE_SCORE = 100;
+export const TRIPLE_LINE_SCORE = 300;
 
 export const initialState = {
   type: 'T',
