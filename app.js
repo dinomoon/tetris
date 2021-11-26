@@ -44,11 +44,14 @@ const App = () => {
 
   const initial = () => {
     changeState(() => ({ ...initialState, type: randomBlockType() }));
+    state.intervalId = setInterval(() => {
+      changeState(moveDown);
+    }, state.interval);
   };
 
-  setInterval(() => {
+  state.intervalId = setInterval(() => {
     changeState(moveDown);
-  }, 1000);
+  }, state.interval);
 
   document.body.addEventListener('keydown', e => {
     switch (e.key) {

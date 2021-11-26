@@ -39,30 +39,34 @@ const makeSeize = state => {
 };
 
 const breakBlocks = () => {
-  // 없앨 수 있는 줄 있는지 확인하고 없앨 수 있으면 없애기
-  let breakLine = 0;
-  for (let i = GAME_ROWS - 1; i > 0; i--) {
-    let cnt = 0;
+  let breakLine = 0; // break한 line 개수
+  let checkLine = 0; // 현재 check하는 row
+  while (checkLine < GAME_ROWS) {
     let breaks = [];
-    for (let j = 0; j < GAME_COLS; j++) {
-      if (playGround.children[i].children[j].classList.contains('seize')) {
-        breaks.push(playGround.children[i].children[j]);
-        cnt++;
+    let currentRow = GAME_ROWS - checkLine - 1;
+    for (let i = 0; i < GAME_COLS; i++) {
+      if (
+        playGround.children[currentRow].children[i].classList.contains('seize')
+      ) {
+        breaks.push(playGround.children[currentRow].children[i]);
       } else {
         break;
       }
     }
-    if (cnt === GAME_COLS) {
+
+    if (breaks.length === GAME_COLS) {
       breakLine++;
       // 파괴
       breaks.forEach(item => (item.className = ''));
       // 밑으로 당기기
-      for (let k = i; k > 0; k--) {
-        for (let l = 0; l < GAME_COLS; l++) {
-          playGround.children[k].children[l].className =
-            playGround.children[k - 1].children[l].className;
+      for (let i = currentRow; i > 0; i--) {
+        for (let j = 0; j < GAME_COLS; j++) {
+          playGround.children[i].children[j].className =
+            playGround.children[i - 1].children[j].className;
         }
       }
+    } else {
+      checkLine++;
     }
   }
 
@@ -77,7 +81,6 @@ const checkFinish = () => {
   let flag = false;
   for (let i = 0; i < GAME_COLS; i++) {
     if (playGround.children[0].children[i].classList.contains('seize')) {
-      alert('게임종료');
       flag = true;
       break;
     }
@@ -92,6 +95,7 @@ const clearTetris = () => {
       playGround.children[i].children[j].className = '';
     }
   }
+  score.textContent = 0;
 };
 
 export const moveBlocks = (
@@ -103,7 +107,7 @@ export const moveBlocks = (
   initial,
   onStop,
 ) => {
-  const { type: blockType, dir, left, top, keyType } = state;
+  const { type: blockType, dir, left, top, keyType, intervalId } = state;
   let stop = false;
   let newBlocks = [];
 
@@ -154,15 +158,14 @@ export const moveBlocks = (
         // 블럭 부수기
         breakBlocks();
 
-        // 마지막줄에 블럭이 있으면 테트리스 지우고 다시 시작
+        // 게임이 종료되면 테트리스 지우고 다시 시작
         let finish = checkFinish();
         if (finish) {
+          alert(`게임종료 ${score.textContent}점입니다.`);
           clearTetris();
-          setTimeout(initial, 0);
-        } else {
-          // 새로운 블록 추가
-          setTimeout(initial, 0);
         }
+        clearInterval(intervalId);
+        setTimeout(initial, 0);
       default:
         break;
     }
