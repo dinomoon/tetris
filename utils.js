@@ -1,4 +1,4 @@
-import { playGround, score } from './dom.js';
+import { level, lines, playGround, score } from './dom.js';
 import {
   GAME_ROWS,
   GAME_COLS,
@@ -70,11 +70,18 @@ const breakBlocks = () => {
     }
   }
 
-  // 점수 추가하기
+  // 점수 증가
   let curScore = +score.textContent;
   if (breakLine === 1) score.innerHTML = curScore + SINGLE_LINE_SCORE;
   else if (breakLine === 2) score.innerHTML = curScore + DOUBLE_LINE_SCORE;
   else if (breakLine >= 3) score.innerHTML = curScore + TRIPLE_LINE_SCORE;
+
+  // lines 증가
+  let curLines = +lines.textContent;
+  lines.innerHTML = curLines + breakLine;
+
+  // 5줄 부술때마다 레벨 + 1
+  level.innerHTML = Math.floor(+lines.textContent / 3) + 1;
 };
 
 const checkFinish = () => {
@@ -95,7 +102,9 @@ const clearTetris = () => {
       playGround.children[i].children[j].className = '';
     }
   }
+  level.textContent = 1;
   score.textContent = 0;
+  lines.textContent = 0;
 };
 
 export const moveBlocks = (

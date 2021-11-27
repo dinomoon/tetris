@@ -1,15 +1,43 @@
+:root {
+  --border-color: #868e96;
+}
+
 * {
   box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+ul {
+  list-style-type: none;
 }
 
 h1 {
   text-align: center;
+  margin-bottom: 1rem;
+  color: var(--border-color);
+}
+
+h1 span {
+  font-size: 1rem;
+}
+
+body {
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.container {
+  max-width: 500px;
+  display: flex;
 }
 
 .playground {
   width: 300px;
   margin: 0 auto;
-  border: 1px solid #495057;
+  border: 4px solid var(--border-color);
 }
 
 .playground div {
@@ -19,7 +47,59 @@ h1 {
 .playground span {
   width: 30px;
   height: 30px;
-  border: 1px solid #ced4da;
+  border: 1px solid #ddd;
+}
+
+.info {
+  padding-left: 1rem;
+}
+
+.info .next-block,
+.info .wrapper,
+.info .instruction {
+  border: 4px solid var(--border-color);
+}
+
+.info .wrapper {
+  margin-bottom: 1rem;
+}
+
+.info .wrapper div {
+  border-bottom: 4px solid var(--border-color);
+}
+
+.info .wrapper div:last-child {
+  border: none;
+}
+
+.info .wrapper div {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+.info .wrapper .text {
+  color: var(--border-color);
+}
+
+.info .next-block {
+  height: 186px;
+  margin-bottom: 1rem;
+}
+
+.info .instruction {
+  padding: 10px;
+  color: var(--border-color);
+}
+
+.info .instruction li:nth-child(3) {
+  margin-bottom: 1rem;
+}
+
+.info .instruction li:nth-child(4) {
+  margin-bottom: 10px;
 }
 
 .O {

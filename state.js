@@ -11,7 +11,7 @@ export const initialState = {
   top: 0,
   keyType: null,
   intervalId: null,
-  interval: 1000,
+  interval: 800,
   stop: false,
 };
 

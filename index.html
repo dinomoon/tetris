@@ -8,8 +8,38 @@
     <title>Tetris</title>
   </head>
   <body>
-    <h1 id="score">0</h1>
-    <div class="playground"></div>
+    <div>
+      <h1>Tetris <span>from dinomoon</span></h1>
+      <div class="container">
+        <div class="playground"></div>
+        <div class="info">
+          <div class="next-block"></div>
+          <div class="wrapper">
+            <div>
+              <span class="text">level</span>
+              <span id="level">1</span>
+            </div>
+            <div>
+              <span class="text">score</span>
+              <span id="score">0</span>
+            </div>
+            <div>
+              <span class="text">lines</span>
+              <span id="lines">0</span>
+            </div>
+          </div>
+          <div class="instruction">
+            <ul>
+              <li>✔ 한 줄: 40점</li>
+              <li>✔ 두 줄: 100점</li>
+              <li>✔ 세 줄 이상: 300점</li>
+              <li>⭐ 세 줄 없앨 때마다 레벨 증가</li>
+              <li>⭐ 레벨이 증가할 때마다 속도 증가</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
     <script src="index.js" type="module"></script>
   </body>
 </html>
