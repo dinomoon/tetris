@@ -1,14 +1,17 @@
-import { level, lines, playGround, score } from './dom.js';
+import { level, lines, nextBlock, playGround, score } from './dom.js';
 import {
   GAME_ROWS,
   GAME_COLS,
   SINGLE_LINE_SCORE,
   DOUBLE_LINE_SCORE,
   TRIPLE_LINE_SCORE,
+  NEXT_BLOCK_WINDOW_ROWS,
+  NEXT_BLOCK_WINDOW_COLS,
 } from './state.js';
 import { blocks } from './blocks.js';
 
 export const drawTetris = () => {
+  // tetris 그리기
   for (let i = 0; i < GAME_ROWS; i++) {
     const row = document.createElement('div');
     for (let j = 0; j < GAME_COLS; j++) {
@@ -17,6 +20,26 @@ export const drawTetris = () => {
     }
     playGround.appendChild(row);
   }
+
+  // next block 창 그리기
+  for (let i = 0; i < NEXT_BLOCK_WINDOW_ROWS; i++) {
+    const row = document.createElement('div');
+    for (let j = 0; j < NEXT_BLOCK_WINDOW_COLS; j++) {
+      const col = document.createElement('span');
+      row.appendChild(col);
+    }
+    nextBlock.appendChild(row);
+  }
+};
+
+export const drawNextBlock = ({ type, nextBlockType, nextBlockDir }) => {
+  const nextBlocks = document.querySelectorAll('.next');
+  nextBlocks.forEach(block => block.classList.remove(type, 'next'));
+  blocks[nextBlockType][nextBlockDir].forEach(v => {
+    let x = v[0] + 2;
+    let y = v[1] + 1;
+    nextBlock.children[y].children[x].classList.add(nextBlockType, 'next');
+  });
 };
 
 export const removeCurrentBlocks = blockType => {
@@ -31,10 +54,10 @@ export const addNewBlocks = (blockType, newBlocks) => {
 const makeSeize = state => {
   const { type: blockType, dir, left, top } = state;
   blocks[blockType][dir].forEach(v => {
-    let x = v[0] + left;
-    let y = v[1] + top;
-    playGround.children[y].children[x].classList.remove('moving');
-    playGround.children[y].children[x].classList.add(blockType, 'seize');
+    let nx = v[0] + left;
+    let ny = v[1] + top;
+    playGround.children[ny].children[nx].classList.remove('moving');
+    playGround.children[ny].children[nx].classList.add(blockType, 'seize');
   });
 };
 
@@ -197,6 +220,8 @@ export const randomBlockType = () => {
 
   return blockObj[Math.floor(Math.random() * 7)];
 };
+
+export const randomDir = () => Math.floor(Math.random() * 4);
 
 export const render = (
   state,

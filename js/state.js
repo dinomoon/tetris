@@ -3,10 +3,14 @@ export const GAME_COLS = 10;
 export const SINGLE_LINE_SCORE = 40;
 export const DOUBLE_LINE_SCORE = 100;
 export const TRIPLE_LINE_SCORE = 300;
+export const NEXT_BLOCK_WINDOW_ROWS = 6;
+export const NEXT_BLOCK_WINDOW_COLS = 6;
 
 export const initialState = {
-  type: 'T',
-  dir: 0,
+  type: null,
+  nextBlockType: null,
+  dir: null,
+  nextBlockDir: null,
   left: 3,
   top: 0,
   keyType: null,

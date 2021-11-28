@@ -6,16 +6,26 @@ import {
   moveDown,
   changeDir,
 } from './state.js';
-import { drawTetris, randomBlockType, render } from './utils.js';
+import {
+  drawNextBlock,
+  drawTetris,
+  randomBlockType,
+  randomDir,
+  render,
+} from './utils.js';
 
-// TODO: 시간 점점 빨라지게
-// TODO: UI
 // TODO: 주석달기
 // TODO: 리팩토링
 // FIXME:
 
 const App = () => {
-  let state = { ...initialState, type: randomBlockType() };
+  let state = {
+    ...initialState,
+    type: randomBlockType(),
+    nextBlockType: randomBlockType(),
+    dir: randomDir(),
+    nextBlockDir: randomDir(),
+  };
 
   // 상태 변경 함수
   const changeState = callback => {
@@ -47,13 +57,21 @@ const App = () => {
   };
 
   const initial = () => {
-    changeState(() => ({ ...initialState, type: randomBlockType() }));
+    changeState(() => ({
+      ...initialState,
+      type: state.nextBlockType,
+      nextBlockType: randomBlockType(),
+      dir: state.nextBlockDir,
+      nextBlockDir: randomDir(),
+    }));
+    drawNextBlock(state);
+
     let curLevel = +level.textContent;
     let interval;
-    if (curLevel < 8) {
+    if (curLevel < 7) {
       interval = state.interval - curLevel * 100;
     } else {
-      interval = state.interval - 700;
+      interval = state.interval - 650;
     }
     state.intervalId = setInterval(() => {
       changeState(moveDown);
@@ -89,6 +107,7 @@ const App = () => {
   });
 
   drawTetris();
+  drawNextBlock(state);
   render(state);
 };
 

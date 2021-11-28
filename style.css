@@ -50,6 +50,19 @@ body {
   border: 1px solid #ddd;
 }
 
+.next-block div {
+  display: flex;
+}
+
+.next-block span {
+  width: 30px;
+  height: 30px;
+}
+
+.next-block .next {
+  border: 1px solid #fff;
+}
+
 .info {
   padding-left: 1rem;
 }
