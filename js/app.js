@@ -14,10 +14,6 @@ import {
   render,
 } from './utils.js';
 
-// TODO: 주석달기
-// TODO: 리팩토링
-// FIXME:
-
 const App = () => {
   let state = {
     ...initialState,
